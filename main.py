@@ -8,6 +8,7 @@ from Blocks import *
 
 grav = -.2
 level = 1
+scr = 0
 pygame.init()
 pygame.display.set_caption("Dinosaur Game")
 window = pygame.display.set_mode((550, 550))
@@ -51,7 +52,7 @@ def checkCollisions():
 def drawLostScreen():
     global font, level
     screen.fill((0, 0, 0))
-    end = font.render("You lost, Final Score was " + str(level-1), True, (116, 42, 133), None)
+    end = font.render("You lost, Final Score was " + str(scr), True, (116, 42, 133), None)
     endBox = end.get_rect()
     endBox.center = (pygame.Surface.get_width(screen)/2, pygame.Surface.get_height(screen)/2)
     endBack = Backround(screen, 0)
@@ -70,18 +71,19 @@ while running:
         Obstacle.update()
         if Obstacle.x < -10:
             obst.remove(Obstacle)
+            scr += 1
 
     checkCollisions()
     screen.fill((0,0,0))
     back.draw(screen)
     dinosaur.draw(screen)
     screen.blit(score, scoreRect)
+    score = font.render("Score: " + str(scr), True, (116, 42, 133), None)
     for Obstacle in obst:
         Obstacle.draw(screen)
 
     if len(obst) == 0:
         dinosaur.grav = grav
-        score = font.render("Score: " + str(level), True, (116, 42, 133), None)
         spawnObstacles()
 
     pygame.display.flip()
