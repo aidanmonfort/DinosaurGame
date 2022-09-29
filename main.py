@@ -4,7 +4,6 @@ import pygame
 
 from Dino import *
 from Backround import *
-from Blocks import *
 from Obstacle import *
 
 grav = -.2
