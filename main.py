@@ -5,6 +5,7 @@ import pygame
 from Dino import *
 from Backround import *
 from Blocks import *
+from Obstacle import *
 
 grav = -.2
 level = 1
@@ -33,11 +34,11 @@ def spawnObstacles():
     for i in range(1, 7):
         choice = random.randint(0, 2)
         if choice == 0:
-            obst.append(Rock(screen, level, (i * pygame.Surface.get_width(screen)/1.5),
-                         pygame.Surface.get_height(screen) * (5/6)))
+            obst.append(Obstacle(screen, level, i * pygame.Surface.get_width(screen)/1.5,
+                         pygame.Surface.get_height(screen) * (5/6), 'rock.png'))
         else:
-            obst.append(Cactus(screen, level, (i * pygame.Surface.get_width(screen)/1.5),
-                         pygame.Surface.get_height(screen) * (5/6)))
+            obst.append(Obstacle(screen, level, (i * pygame.Surface.get_width(screen)/1.5),
+                         pygame.Surface.get_height(screen) * (5/6), 'cactus.png'))
 
     level += 1
     grav += -.025
@@ -67,10 +68,10 @@ while running:
     checkInput()
     dinosaur.update(screen)
     back.update()
-    for Obstacle in obst:
-        Obstacle.update()
-        if Obstacle.x < -10:
-            obst.remove(Obstacle)
+    for i in range(len(obst))[::-1]:
+        obst[i].update()
+        if obst[i].x < -10:
+            obst.remove(obst[i])
             scr += 1
 
     checkCollisions()
@@ -79,12 +80,13 @@ while running:
     dinosaur.draw(screen)
     screen.blit(score, scoreRect)
     score = font.render("Score: " + str(scr), True, (116, 42, 133), None)
-    for Obstacle in obst:
-        Obstacle.draw(screen)
+    for i in range(len(obst)):
+        obst[i].draw(screen)
 
     if len(obst) == 0:
         dinosaur.grav = grav
         spawnObstacles()
+
 
     pygame.display.flip()
     clock.tick(60)
